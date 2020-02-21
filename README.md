@@ -1,4 +1,4 @@
-# Awesome Project Build with TypeORM
+# Awesome Project Build with TypeORM for BluePay
 
 Steps to run this project:
 
