@@ -1,23 +1,38 @@
-import { Router } from "express";
-import UserController from "../controller/UserController";
+import { Router, Request, Response } from "express";
+import UserController from "../controllers/UserController";
+import ProfileController from "../controllers/ProfileController";
+import UserManager  from "../managers/UserManager";
 import { checkJwt } from "../middlewares/checkJwt";
 import { checkRole } from "../middlewares/checkRole";
+var path = require('path');
+var multer = require('multer');
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+});
 
-const router = Router();
+var upload = multer({ storage: storage })
+//var upload = multer({ dest: 'uploads/' });
 
-//Get all users 
-router.get("/", [checkJwt, checkRole(["ADMIN"])], UserController.listAll);
+  const router = Router();
 
-// Get one user 
-router.get("/:id([0-9]+)", [checkJwt, checkRole(["ADMIN"])], UserController.getOneById);
+  //Get all users  // [checkJwt, checkRole(["ADMIN"])],
+  router.get("/",  UserController.listAll);
 
-//Create a new user
-router.post("/", [checkJwt, checkRole(["ADMIN"])], UserController.newUser);
+  // Get one user  // [checkJwt, checkRole(["ADMIN"])],
+  router.get("/:id([0-9]+)",  UserController.getOneById);
 
-//Edit one user
-router.patch("/:id([0-9]+)", [checkJwt, checkRole(["ADMIN"])], UserController.editUser); 
+  //Create a new user  // [checkJwt, checkRole(["ADMIN"])],
+  router.post("/",  UserController.newUser);
 
-//Delete one user
-router.delete("/:id([0-9]+)", [checkJwt, checkRole(["ADMIN"])], UserController.deleteUser);
+  //Edit one user  // [checkJwt, checkRole(["ADMIN"])],
+  router.patch("/:id([0-9]+)",  UserController.editUser);
 
-export default router;
+  //Edit one user  // [checkJwt, checkRole(["ADMIN"])],
+  router.patch("/:id([0-9]+)/avatar", upload.single("image"),ProfileController.UploadProfile);
+
+  //Delete one user  // [checkJwt, checkRole(["ADMIN"])],
+  router.delete("/:id([0-9]+)",  UserController.deleteUser);
+
+  export default router;

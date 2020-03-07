@@ -9,7 +9,7 @@ import {
   JoinColumn
 } from "typeorm";
 import {Profile} from "./Profile";
-import { Length, IsNotEmpty, IsEmail } from "class-validator";
+import { Length, IsNotEmpty } from "class-validator";
 import * as bcrypt from "bcryptjs";
 
 @Entity()
@@ -25,19 +25,17 @@ export class User {
   @Length(4, 20)
   username: string;
 
-  @Column({ nullable: false})
+  @Column()
   @Length(4, 20)
   phone: string ;
 
   @Column({ nullable: false})
-  @IsNotEmpty({message: 'The email is required'})
-  @IsEmail({}, {message: 'Incorrect email'})
-  email!: string;
+  @Length(4, 20)
+  email: string;
 
   @Column()
-  @Length(4, 30, {message: 'The password must be at least 6 but not longer than 30 characters'})
-  @IsNotEmpty({message: 'The password is required'})
-  password!: string;
+  @Length(4, 100)
+  password: string;
 
   @Column({ default: "USER"})
   role: string;
